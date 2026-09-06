@@ -51,16 +51,20 @@ def clean_for_speech(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def _build_system_prompt(location: str, weather: dict, rag_context: str) -> str:
+def _build_system_prompt(location: str | None, weather: dict,
+                         rag_context: str) -> str:
+    where = f"{location} district, Kerala, India" if location else "Kerala, India"
+
     weather_info = ""
     if weather and not weather.get("stub"):
         weather_info = (
-            f"Current weather in {location}: {weather['summary']}, "
+            f"Current weather in {where}: {weather['summary']}, "
             f"{weather['temp_c']}°C, humidity {weather['humidity']}%."
         )
-    
-    return f"""You are Vani, an agricultural advisor for farmers in {location}, India.
+
+    return f"""You are Vani, an agricultural advisor for farmers in {where}.
 You give practical, actionable advice about crops, diseases, pests and farming practices.
+Tailor advice to this area's climate, soil and growing seasons where it matters.
 
 Answer whatever the farmer asks. Most questions will be about farming, but
 help with anything else they raise too.
@@ -81,10 +85,12 @@ repeat.
 {rag_context}"""
 
 
-def ask(question: str, location: str = None) -> str:
-    """Get AI answer for a farmer's question using direct HTTP request."""
-    if not location:
-        location = settings.default_location_name
+def ask(question: str, location: str | None = None) -> str:
+    """Get AI answer for a farmer's question using direct HTTP request.
+
+    `location` is the farmer's district, resolved from the pincode they keyed
+    in. None means we could not place them, so the advice stays general.
+    """
     
     # Get weather context
     weather = weather_svc.get_weather(settings.default_lat, settings.default_lng)

@@ -16,7 +16,7 @@ from fastapi.responses import Response
 from .. import pending
 from ..config import settings
 from ..logbook import log
-from ..services import llm, sms, stt
+from ..services import llm, pincode, sms, stt
 
 router = APIRouter(prefix="/ivr", tags=["ivr"])
 
@@ -119,15 +119,18 @@ def _say(text: str) -> str:
     return f'<Say voice="Polly.Aditi">{_esc(text)}</Say>'
 
 
-def _listen(prompt: str, attempt: int) -> str:
+def _listen(prompt: str, attempt: int, district: str | None = None) -> str:
     """Gather speech. Generous timeouts, retries instead of hanging up.
 
     speechModel="phone_call" + enhanced="true" selects Twilio's model tuned
     for narrowband telephony audio, which handles accented English far better
     than the default model.
+
+    Only used when Azure STT is switched off.
     """
     base = settings.base_url
-    action = f"{base}/ivr/process?attempt={attempt}"
+    action = (f"{base}/ivr/process?attempt={attempt}"
+              f"&amp;loc={quote(district or '')}")
     return (
         f'<Gather input="speech" action="{action}" method="POST" '
         f'timeout="10" speechTimeout="4" language="{settings.speech_language}" '
@@ -145,75 +148,95 @@ async def voice_entry(request: Request):
     form = await request.form()
     log(f"--- CALL START --- from={form.get('From')} sid={form.get('CallSid')}")
 
-    base = settings.base_url
     greeting = (
-        f"Hello! Welcome to Vani, your farming helpline. "
-        f"Are you calling from {settings.default_location_name}? "
-        f"Please say yes or no."
+        "Hello! Welcome to Vani, your farming helpline. "
+        "To find your area, please enter your six digit pincode on the keypad."
     )
-
-    inner = (
-        f'<Gather input="speech dtmf" action="{base}/ivr/confirm" method="POST" '
-        f'timeout="8" speechTimeout="3" numDigits="1" '
-        f'language="{settings.speech_language}" '
-        f'speechModel="phone_call" enhanced="true" '
-        f'hints="yes, yes I am, no, correct, right" actionOnEmptyResult="true">'
-        f"{_say(greeting)}"
-        f"</Gather>"
-    )
-    inner += _say("Sorry, I could not hear you. Please call again. Goodbye.")
-    inner += "<Hangup/>"
-    return _twiml(inner)
+    return _twiml(_ask_pincode(greeting, attempt=1))
 
 
-@router.post("/confirm")
-async def confirm_location(SpeechResult: str = Form(default=""),
-                           Digits: str = Form(default="")):
-    """Acknowledge the location, then invite the question.
+def _ask_pincode(prompt: str, attempt: int) -> str:
+    """Collect the pincode on the keypad.
 
-    Any answer moves the call forward; we never dead-end a farmer here.
+    Keypad digits cannot be misheard, which makes this the most reliable
+    input in the whole system.
     """
-    said = SpeechResult.lower().strip()
-    log(f"location: speech={said!r} digits={Digits!r}")
+    base = settings.base_url
+    action = f"{base}/ivr/pincode?attempt={attempt}"
+    return (
+        f'<Gather input="dtmf" action="{action}" method="POST" '
+        f'numDigits="6" timeout="12" finishOnKey="#" '
+        f'actionOnEmptyResult="true">'
+        f"{_say(prompt)}"
+        f"</Gather>"
+        + _say("Sorry, I did not get your pincode. Please call again. Goodbye.")
+        + "<Hangup/>"
+    )
 
-    denied = any(w in said for w in ("no", "nope", "not", "nahi"))
-    location = settings.default_location_name
 
-    if denied:
+@router.post("/pincode")
+async def collect_pincode(request: Request, Digits: str = Form(default="")):
+    """Turn the keyed-in pincode into a district, then invite the question.
+
+    Every branch moves the call forward: a farmer is never dead-ended
+    because of a pincode problem.
+    """
+    attempt = int(request.query_params.get("attempt", 1))
+    entered = Digits.strip()
+    district = pincode.district(entered)
+
+    log(f"pincode: entered={entered!r} district={district}")
+
+    # Nothing usable and we still have retries left: ask again.
+    if not pincode.is_valid(entered) and attempt < 2:
+        prompt = (
+            "That did not look like a six digit pincode. "
+            "Please enter your six digit pincode again."
+        )
+        return _twiml(_ask_pincode(prompt, attempt=attempt + 1))
+
+    if district:
         opening = (
-            "No problem. I will give you general farming advice. "
-            "Please tell me your question now."
+            f"Thank you. That is {district} district. "
+            f"Now please tell me your farming question."
+        )
+    elif pincode.is_valid(entered):
+        # A real pincode, just not one we cover.
+        opening = (
+            "Thank you. We currently cover Kerala, so I will give you "
+            "general farming advice. Please tell me your question now."
         )
     else:
         opening = (
-            f"Great, {location} noted. "
-            f"Now please tell me your farming question."
+            "No problem, I will give you general farming advice. "
+            "Please tell me your question now."
         )
 
-    inner = _ask_question(opening)
-    return _twiml(inner)
+    return _twiml(_ask_question(opening, district))
 
 
-def _ask_question(prompt: str) -> str:
+def _ask_question(prompt: str, district: str | None) -> str:
     """Invite the question, using whichever speech pipeline is configured."""
     if settings.azure_stt_enabled:
-        return _record(prompt)
-    inner = _listen(prompt, attempt=1)
+        return _record(prompt, district)
+    inner = _listen(prompt, attempt=1, district=district)
     inner += _say("Sorry, I could not hear you. Please call again. Goodbye.")
     inner += "<Hangup/>"
     return inner
 
 
-def _record(prompt: str) -> str:
+def _record(prompt: str, district: str | None) -> str:
     """Record the caller so Azure can transcribe it.
 
     trim-silence keeps the clip tight; timeout ends the recording after a
     few seconds of quiet so the farmer does not have to press anything.
+    The district rides along in the action URL, since Twilio is stateless.
     """
     base = settings.base_url
+    action = f"{base}/ivr/recorded?loc={quote(district or '')}"
     return (
         _say(prompt)
-        + f'<Record action="{base}/ivr/recorded" method="POST" '
+        + f'<Record action="{action}" method="POST" '
         f'maxLength="30" timeout="4" playBeep="true" '
         f'trim="trim-silence" finishOnKey="#" />'
         + _say("Sorry, I did not hear anything. Please call again. Goodbye.")
@@ -222,10 +245,12 @@ def _record(prompt: str) -> str:
 
 
 @router.post("/recorded")
-async def recorded(CallSid: str = Form(default=""),
+async def recorded(request: Request,
+                   CallSid: str = Form(default=""),
                    RecordingUrl: str = Form(default="")):
     """Recording finished. Transcribe and answer in the background."""
-    log(f"recorded: sid={CallSid} url={RecordingUrl}")
+    district = unquote(request.query_params.get("loc", "")) or None
+    log(f"recorded: sid={CallSid} district={district} url={RecordingUrl}")
 
     if not RecordingUrl:
         inner = _say("Sorry, I did not catch that. Please call again. Goodbye.")
@@ -237,13 +262,16 @@ async def recorded(CallSid: str = Form(default=""),
         log(f"  azure stt heard: {question!r}")
         if not question:
             return "", ""
-        return question, llm.ask(question, settings.default_location_name)
+        return question, llm.ask(question, district)
 
     pending.start(CallSid, work)
 
     base = settings.base_url
     inner = _say("Let me check that for you.")
-    inner += f'<Redirect method="POST">{base}/ivr/result?tries=0</Redirect>'
+    inner += (
+        f'<Redirect method="POST">{base}/ivr/result?tries=0'
+        f'&amp;loc={quote(district or "")}</Redirect>'
+    )
     return _twiml(inner)
 
 
@@ -272,9 +300,10 @@ async def result(request: Request,
         inner = '<Pause length="2"/>'
         if tries == 2:
             inner += _say("Still working on it.")
+        loc = request.query_params.get("loc", "")
         inner += (
             f'<Redirect method="POST">{base}/ivr/result?tries={tries + 1}'
-            f"</Redirect>"
+            f'&amp;loc={loc}</Redirect>'
         )
         return _twiml(inner)
 
@@ -287,11 +316,13 @@ async def result(request: Request,
         )
         return _twiml(inner + "<Hangup/>")
 
+    district = unquote(request.query_params.get("loc", "")) or None
     log(f"result: answering {job['question'][:80]!r}")
     return _twiml(_answer_and_offer_more(
         job["question"],
         precomputed=job["answer"],
         sms_to=_farmer_number(Direction, To, From),
+        district=district,
     ))
 
 
@@ -304,6 +335,7 @@ async def process_speech(request: Request,
                          From: str = Form(default="")):
     """Transcription arrives here. Answer it, or re-prompt if empty."""
     attempt = int(request.query_params.get("attempt", 1))
+    district = unquote(request.query_params.get("loc", "")) or None
     raw = SpeechResult.strip()
     question = _normalise_transcript(raw)
 
@@ -317,7 +349,7 @@ async def process_speech(request: Request,
                 "I did not catch that. Please say your farming question "
                 "clearly after the beep."
             )
-            inner = _listen(prompt, attempt=attempt + 1)
+            inner = _listen(prompt, attempt=attempt + 1, district=district)
             inner += _say("Sorry, I still could not hear you. Goodbye.")
             inner += "<Hangup/>"
             return _twiml(inner)
@@ -333,10 +365,13 @@ async def process_speech(request: Request,
     # question confidently is worse than taking one extra turn.
     if _low_confidence(Confidence) and attempt < MAX_ATTEMPTS:
         log("  low confidence, confirming with caller")
-        return _twiml(_confirm_question(question, attempt))
+        return _twiml(_confirm_question(question, attempt, district))
 
     return _twiml(_answer_and_offer_more(
-        question, sms_to=_farmer_number(Direction, To, From)))
+        question,
+        sms_to=_farmer_number(Direction, To, From),
+        district=district,
+    ))
 
 
 def _farmer_number(direction: str, to: str, from_: str) -> str:
@@ -357,11 +392,13 @@ def _low_confidence(raw: str) -> bool:
         return False
 
 
-def _confirm_question(question: str, attempt: int) -> str:
+def _confirm_question(question: str, attempt: int,
+                      district: str | None = None) -> str:
     """Read the question back and ask the caller to confirm."""
     base = settings.base_url
     # &amp; because this URL sits inside an XML attribute
-    action = f"{base}/ivr/verify?q={quote(question)}&amp;attempt={attempt}"
+    action = (f"{base}/ivr/verify?q={quote(question)}&amp;attempt={attempt}"
+              f"&amp;loc={quote(district or '')}")
     prompt = f"I heard: {question}. Is that correct? Say yes or no."
     return (
         f'<Gather input="speech dtmf" action="{action}" method="POST" '
@@ -386,6 +423,7 @@ async def verify_question(request: Request,
     """Caller confirms or rejects what we thought we heard."""
     question = unquote(request.query_params.get("q", ""))
     attempt = int(request.query_params.get("attempt", 1))
+    district = unquote(request.query_params.get("loc", "")) or None
     said = SpeechResult.lower().strip()
 
     log(f"verify: speech={said!r} digits={Digits!r} for {question!r}")
@@ -396,7 +434,7 @@ async def verify_question(request: Request,
 
     if rejected:
         inner = _listen("Sorry about that. Please say your question again.",
-                        attempt=attempt + 1)
+                        attempt=attempt + 1, district=district)
         inner += _say("Sorry, I could not hear you. Goodbye.")
         inner += "<Hangup/>"
         return _twiml(inner)
@@ -404,12 +442,16 @@ async def verify_question(request: Request,
     # Treat yes, silence, or anything unclear as confirmation: the caller
     # already waited once, do not make them wait again.
     return _twiml(_answer_and_offer_more(
-        question, sms_to=_farmer_number(Direction, To, From)))
+        question,
+        sms_to=_farmer_number(Direction, To, From),
+        district=district,
+    ))
 
 
 def _answer_and_offer_more(question: str,
                            precomputed: str | None = None,
-                           sms_to: str = "") -> str:
+                           sms_to: str = "",
+                           district: str | None = None) -> str:
     """Speak the answer, then offer another question.
 
     `precomputed` lets the background worker's answer be reused instead of
@@ -420,7 +462,7 @@ def _answer_and_offer_more(question: str,
         log(f"answer={answer[:160]!r}")
     else:
         try:
-            answer = llm.ask(question, settings.default_location_name)
+            answer = llm.ask(question, district)
             log(f"answer={answer[:160]!r}")
         except Exception as e:
             log(f"LLM FAILED: {e}")
@@ -443,7 +485,8 @@ def _answer_and_offer_more(question: str,
     base = settings.base_url
     inner = _say(answer)
     inner += (
-        f'<Gather input="speech dtmf" action="{base}/ivr/more" method="POST" '
+        f'<Gather input="speech dtmf" '
+        f'action="{base}/ivr/more?loc={quote(district or "")}" method="POST" '
         f'timeout="6" speechTimeout="2" numDigits="1" '
         f'language="{settings.speech_language}" '
         f'speechModel="phone_call" enhanced="true" '
@@ -457,18 +500,22 @@ def _answer_and_offer_more(question: str,
 
 
 @router.post("/more")
-async def more_questions(SpeechResult: str = Form(default=""),
+async def more_questions(request: Request,
+                         SpeechResult: str = Form(default=""),
                          Digits: str = Form(default="")):
     """Loop back for another question, or sign off."""
     said = SpeechResult.lower().strip()
-    log(f"more: speech={said!r} digits={Digits!r}")
+    district = unquote(request.query_params.get("loc", "")) or None
+    log(f"more: speech={said!r} digits={Digits!r} district={district}")
 
     wants_more = Digits == "1" or any(
         w in said for w in ("yes", "yeah", "yep", "another", "one more")
     )
 
     if wants_more:
-        return _twiml(_ask_question("Please tell me your next question."))
+        # Location carries over, so we never re-ask for the pincode.
+        return _twiml(_ask_question("Please tell me your next question.",
+                                    district))
 
     inner = _say("Thank you for calling Vani. Have a good harvest. Goodbye.")
     inner += "<Hangup/>"

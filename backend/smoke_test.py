@@ -35,17 +35,34 @@ def check(label: str, condition: bool) -> None:
 
 
 def main() -> None:
-    print("1. Greeting / location prompt")
+    print("1. Greeting asks for pincode on the keypad")
     xml = post("/ivr/voice")
-    check(f"language is {attr(xml, 'language')}",
-          attr(xml, "language") in ("en-US", "en-GB"))
-    check("uses phone_call speech model",
-          attr(xml, "speechModel") == "phone_call")
-    check("asks about Alappuzha", "Alappuzha" in xml)
+    check("gathers 6 dtmf digits",
+          attr(xml, "input") == "dtmf" and attr(xml, "numDigits") == "6")
+    check("posts to /ivr/pincode", "/ivr/pincode" in xml)
+    check("asks for a pincode", "pincode" in spoken(xml)[0].lower())
     print(f"  says: {spoken(xml)[0]}")
 
-    print("\n2. Location confirmed with 'yes'")
-    xml = post("/ivr/confirm", {"SpeechResult": "yes"})
+    print("\n1b. Pincode resolves to the right district")
+    for pin, district in [("688001", "Alappuzha"), ("695001", "Thiruvananthapuram"),
+                          ("673121", "Wayanad"), ("670001", "Kannur")]:
+        xml = post("/ivr/pincode?attempt=1", {"Digits": pin})
+        check(f"{pin} -> {district}", district in spoken(xml)[0])
+
+    print("\n1c. Non-Kerala pincode still proceeds")
+    xml = post("/ivr/pincode?attempt=1", {"Digits": "560001"})
+    check("mentions Kerala coverage", "Kerala" in spoken(xml)[0])
+    check("still invites a question", "question" in spoken(xml)[0].lower())
+    print(f"  says: {spoken(xml)[0]}")
+
+    print("\n1d. Bad input re-asks once, then proceeds")
+    xml = post("/ivr/pincode?attempt=1", {"Digits": "12"})
+    check("re-asks on attempt 1", "/ivr/pincode?attempt=2" in xml)
+    xml = post("/ivr/pincode?attempt=2", {"Digits": "12"})
+    check("gives up asking and proceeds", "question" in spoken(xml)[0].lower())
+
+    print("\n2. Valid pincode invites the question")
+    xml = post("/ivr/pincode?attempt=1", {"Digits": "688001"})
     check("invites a question", "question" in spoken(xml)[0].lower())
     azure_mode = "<Record" in xml
     check(f"pipeline is {'Azure STT (Record)' if azure_mode else 'Twilio ASR'}",
@@ -54,6 +71,7 @@ def main() -> None:
         check("record posts to /ivr/recorded", "/ivr/recorded" in xml)
         check("beep enabled so caller knows when to speak",
               'playBeep="true"' in xml)
+        check("district carried to the next step", "loc=Alappuzha" in xml)
     print(f"  says: {spoken(xml)[0]}")
 
     print("\n2b. Recording with no audio fails gracefully")
