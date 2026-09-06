@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-leaf-50 text-leaf-900 antialiased;
+  }
+
+  /* Subtle field texture: soft horizon wash rather than heavy illustration. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 380px at 82% -8%, rgba(96, 181, 250, 0.14), transparent 70%),
+      radial-gradient(760px 420px at 8% 108%, rgba(69, 140, 62, 0.12), transparent 72%);
+    z-index: -1;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-leaf-500 ring-offset-2 ring-offset-leaf-50;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-leaf-100 bg-white shadow-card;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold
+      transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-leaf-600 text-white hover:bg-leaf-700;
+  }
+
+  .btn-secondary {
+    @apply btn border border-leaf-200 bg-white text-leaf-700 hover:bg-leaf-50;
+  }
+
+  .btn-ghost {
+    @apply btn text-leaf-700 hover:bg-leaf-100;
+  }
+
+  .label {
+    @apply text-xs font-semibold uppercase tracking-wider text-leaf-600;
+  }
+}
+
+@layer utilities {
+  .scrollbar-slim::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-slim::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-leaf-200;
+  }
+}

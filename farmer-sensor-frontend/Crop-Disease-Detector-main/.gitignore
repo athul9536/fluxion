@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+.DS_Store
+
+# Runtime artifacts: uploaded crop images
+backend/storage/
+
+# Supabase CLI local state (keep migrations/ and config.toml)
+supabase/.temp/
+supabase/.branches/

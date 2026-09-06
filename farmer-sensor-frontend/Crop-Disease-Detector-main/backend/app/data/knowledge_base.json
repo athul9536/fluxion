@@ -1,0 +1,178 @@
+[
+  {
+    "id": "rice-blast",
+    "crop": "Rice",
+    "topic": "disease",
+    "title": "Rice leaf blast",
+    "keywords": ["rice", "paddy", "blast", "leaf blast", "brown", "spots", "lesion", "spindle", "fungus", "leaves", "disease"],
+    "text": "Leaf blast in rice is caused by the fungus Magnaporthe oryzae. Early symptoms are small water-soaked spots that widen into spindle shaped lesions with grey centres and brown margins. It spreads fastest in humid weather with long leaf wetness and heavy nitrogen use. Practical steps: remove and destroy severely infected leaves, avoid excess nitrogen top dressing, keep a thin film of water in the field instead of alternating wet and dry extremes, and apply a fungicide recommended by your local Krishi Bhavan following the label rate. Blast-tolerant varieties are the most reliable long term option."
+  },
+  {
+    "id": "rice-brown-spot",
+    "crop": "Rice",
+    "topic": "disease",
+    "title": "Rice brown spot",
+    "keywords": ["rice", "paddy", "brown spot", "brown", "spots", "oval", "potassium", "nutrient", "deficiency", "disease", "leaves"],
+    "text": "Brown spot of rice shows as small oval to circular brown lesions scattered evenly across older leaves, often with a yellow halo. Unlike blast, the lesions stay rounded and do not develop pointed ends. It is strongly linked to poor soil fertility, especially low potassium, and to drought stressed fields. Practical steps: correct potassium and general soil fertility based on a soil test, use clean and treated seed, keep irrigation steady, and remove crop residue after harvest. Fungicide is only needed when the infection reaches the upper leaves."
+  },
+  {
+    "id": "rice-bacterial-blight",
+    "crop": "Rice",
+    "topic": "disease",
+    "title": "Rice bacterial leaf blight",
+    "keywords": ["rice", "paddy", "bacterial", "blight", "yellow", "wilting", "streak", "monsoon", "flooding", "disease"],
+    "text": "Bacterial leaf blight in rice starts as yellow to straw coloured streaks along leaf margins that later dry out. It moves quickly after heavy rain, flooding or wind damage because the bacteria enter through wounds. Practical steps: drain excess standing water, stop nitrogen top dressing until the spread slows, avoid walking through a wet infected field, and remove badly affected hills. Chemical control is limited, so resistant varieties and clean seed are the main defence."
+  },
+  {
+    "id": "rice-fertilizer",
+    "crop": "Rice",
+    "topic": "fertilizer",
+    "title": "Rice nutrient scheduling",
+    "keywords": ["rice", "paddy", "fertilizer", "fertiliser", "nutrient", "nitrogen", "urea", "potash", "phosphorus", "top dressing", "when", "apply"],
+    "text": "Rice responds best to nitrogen split across the season rather than a single heavy dose. A common pattern in Kerala is a basal application at transplanting, a second dose at active tillering, and a third at panicle initiation. Phosphorus is usually given fully as basal, and potassium is split between basal and panicle initiation. Always base actual quantities on a soil test and the recommendation for your variety and season from the local Krishi Bhavan, because rates differ between upland and wetland fields. Do not apply nitrogen just before heavy rain since it will be lost to runoff."
+  },
+  {
+    "id": "rice-irrigation",
+    "crop": "Rice",
+    "topic": "irrigation",
+    "title": "Rice water management",
+    "keywords": ["rice", "paddy", "irrigation", "water", "irrigate", "how often", "flooding", "drainage", "awd", "much water"],
+    "text": "Rice needs the most reliable water supply from tillering through flowering. Keep roughly 2 to 5 cm of water during these stages and never let the field crack at flowering, which is the most sensitive point for yield. Alternate wetting and drying, where the field is re-irrigated once the water drops about 15 cm below the surface, saves water without hurting yield on soils that hold moisture well. Drain the field about 10 days before harvest. If rain is expected, skip irrigation and keep the drainage channel clear so the crop is not submerged for long periods."
+  },
+  {
+    "id": "rice-pests",
+    "crop": "Rice",
+    "topic": "pests",
+    "title": "Common rice pests",
+    "keywords": ["rice", "paddy", "pest", "insect", "stem borer", "brown planthopper", "leaf folder", "dead heart", "hopper burn"],
+    "text": "The main rice pests are stem borer, which causes dead hearts in young plants and white ears later, leaf folder, which rolls leaves together, and brown planthopper, which causes circular patches of dried plants called hopper burn. Practical steps: monitor weekly by parting the canopy at the base, avoid excess nitrogen which makes plants attractive to hoppers, keep field bunds clean, and encourage natural enemies like spiders by not spraying broad spectrum insecticides early. Use only pesticides approved for rice in your state and follow the label."
+  },
+  {
+    "id": "coconut-fertilizer",
+    "crop": "Coconut",
+    "topic": "fertilizer",
+    "title": "Coconut fertilizer timing",
+    "keywords": ["coconut", "palm", "fertilizer", "fertiliser", "manure", "nutrient", "when", "monsoon", "apply", "basin", "potash", "magnesium"],
+    "text": "Coconut is normally fertilized twice a year, timed with the monsoons. The first application goes in with the onset of the southwest monsoon around May and June, and the second after the northeast monsoon around September and October when soil moisture is still good but water is not standing. Apply in a shallow circular basin about 1.8 m from the trunk, mix into the top soil and cover it. Organic manure or compost each year plus attention to potassium and magnesium makes a large difference to nut yield. Never broadcast fertilizer onto waterlogged basins because it will simply wash away."
+  },
+  {
+    "id": "coconut-diseases",
+    "crop": "Coconut",
+    "topic": "disease",
+    "title": "Coconut bud rot and leaf rot",
+    "keywords": ["coconut", "palm", "bud rot", "leaf rot", "spindle", "rot", "yellowing", "crown", "disease", "monsoon"],
+    "text": "Bud rot in coconut is caused by Phytophthora and appears during prolonged wet monsoon weather. The spindle leaf turns pale, withers and can be pulled out easily, and the crown gives off a foul smell. Act quickly: cut away all rotted tissue from the crown, protect the cut surface, and treat neighbouring palms as a precaution since the disease spreads through rain splash. Leaf rot is a separate problem that blackens and shreds the tips of younger fronds and is worse on palms already weakened by root wilt. Improve drainage around the basins and remove severely affected fronds."
+  },
+  {
+    "id": "coconut-irrigation",
+    "crop": "Coconut",
+    "topic": "irrigation",
+    "title": "Coconut watering",
+    "keywords": ["coconut", "palm", "irrigation", "water", "irrigate", "summer", "drip", "basin", "how much"],
+    "text": "An adult coconut palm needs steady moisture through the dry months from January to May, when nut setting for the next season is decided. Basin irrigation every four to seven days in summer, or drip irrigation daily in smaller quantities, both work well. Mulching the basin with coconut husk, fronds or dry leaves cuts evaporation sharply and is one of the cheapest improvements a farmer can make. During monsoon the priority flips to drainage, because standing water around the bole encourages root disease and nut fall."
+  },
+  {
+    "id": "coconut-pests",
+    "crop": "Coconut",
+    "topic": "pests",
+    "title": "Coconut rhinoceros beetle and mite",
+    "keywords": ["coconut", "palm", "pest", "rhinoceros beetle", "red palm weevil", "eriophyid mite", "hole", "frond", "cut"],
+    "text": "Rhinoceros beetle bores into the crown and leaves V shaped cuts on opening fronds, while red palm weevil grubs tunnel inside the stem and can kill the palm before symptoms are obvious. Eriophyid mite scars young nuts and reduces copra. Practical steps: remove breeding sites such as decaying organic heaps and cattle manure pits near the garden, fill the innermost leaf axils with a recommended physical or botanical treatment, and never leave cut trunk wounds open since they attract weevils. Inspect the crown monthly during and after monsoon."
+  },
+  {
+    "id": "rubber-diseases",
+    "crop": "Rubber",
+    "topic": "disease",
+    "title": "Rubber abnormal leaf fall and pink disease",
+    "keywords": ["rubber", "abnormal leaf fall", "phytophthora", "pink disease", "leaf fall", "monsoon", "tapping panel", "disease", "bark"],
+    "text": "Abnormal leaf fall in rubber is a Phytophthora disease that hits during the heaviest monsoon showers. Infected leaves show dark lesions on the petiole with a drop of latex at the centre and fall while still green, and young pods blacken. Pink disease attacks the fork region and shows a thin pinkish fungal growth with bark cracking and latex trails. Practical steps for both: prophylactic cover spraying before the monsoon peak for leaf fall, prompt removal and destruction of affected branches for pink disease, and protection of the tapping panel during wet months. Good drainage and adequate spacing reduce humidity in the canopy."
+  },
+  {
+    "id": "rubber-fertilizer",
+    "crop": "Rubber",
+    "topic": "fertilizer",
+    "title": "Rubber nutrition and tapping",
+    "keywords": ["rubber", "fertilizer", "fertiliser", "nutrient", "tapping", "latex", "yield", "manure", "when"],
+    "text": "Rubber is usually manured twice a year, in April to May before the southwest monsoon and again in September to October. Apply along a band in the weeded strip for young plants and over the whole ground for mature stands, and always fork the fertilizer lightly into moist soil. Cover crops and leaf litter build organic matter and reduce erosion on slopes. Latex yield drops if tapping continues on a stressed or diseased panel, so rest the panel when the bark is not renewing well and avoid tapping wet bark in the monsoon."
+  },
+  {
+    "id": "rubber-soil",
+    "crop": "Rubber",
+    "topic": "soil",
+    "title": "Rubber soil and drainage",
+    "keywords": ["rubber", "soil", "drainage", "slope", "terrace", "erosion", "ph", "acidity", "laterite"],
+    "text": "Rubber grows best on deep, well drained laterite soils that are mildly acidic, roughly pH 4.5 to 6.0. Waterlogging is the fastest way to lose young plants, so on flat land dig field drains and on slopes make contour terraces and silt pits to hold soil and moisture. Avoid deep digging close to the trunk of mature trees because the feeder roots are shallow. Test the soil every two to three years so lime and nutrient corrections are based on evidence rather than guesswork."
+  },
+  {
+    "id": "turmeric-diseases",
+    "crop": "Turmeric",
+    "topic": "disease",
+    "title": "Turmeric rhizome rot and leaf spot",
+    "keywords": ["turmeric", "rhizome rot", "leaf spot", "yellowing", "wilting", "soft", "rot", "disease", "monsoon", "yellow leaves"],
+    "text": "Rhizome rot in turmeric begins with yellowing of the lower leaves and a soft watery rot at the collar, and it is almost always tied to poor drainage during monsoon. Leaf spot and leaf blotch cause brown spots with pale centres on the leaves and reduce rhizome bulking. Practical steps: plant only healthy, treated seed rhizomes on raised beds, keep drainage channels open, remove and destroy affected clumps with the surrounding soil, and rotate away from turmeric and ginger in badly affected plots for a season or two. Mulching with green leaves early in the crop keeps soil temperature and moisture even."
+  },
+  {
+    "id": "turmeric-fertilizer",
+    "crop": "Turmeric",
+    "topic": "fertilizer",
+    "title": "Turmeric nutrition and earthing up",
+    "keywords": ["turmeric", "fertilizer", "fertiliser", "nutrient", "mulch", "earthing up", "organic", "manure", "when"],
+    "text": "Turmeric is a heavy feeder and responds strongly to organic matter. Farmyard manure or compost goes in at planting, and nitrogen and potassium are given in splits at roughly 45, 90 and 120 days after planting, each followed by mulching and earthing up so the developing rhizomes stay covered. Neem cake worked into the beds improves both nutrition and soil health. Stop nitrogen well before harvest so the rhizomes mature and store properly."
+  },
+  {
+    "id": "turmeric-irrigation",
+    "crop": "Turmeric",
+    "topic": "irrigation",
+    "title": "Turmeric water needs",
+    "keywords": ["turmeric", "irrigation", "water", "irrigate", "drainage", "raised bed", "how often", "much water"],
+    "text": "Rainfed turmeric usually needs no irrigation through the monsoon, but the beds must drain freely because standing water quickly causes rhizome rot. In drier periods and in irrigated crops, water every 7 to 10 days on heavy soils and more often on light sandy soils, keeping the beds evenly moist rather than alternating between dry and saturated. Water requirement peaks during rhizome development roughly two to four months after planting and tapers off as the leaves start drying at maturity."
+  },
+  {
+    "id": "monsoon-practices",
+    "crop": "General",
+    "topic": "seasonal",
+    "title": "Monsoon crop protection",
+    "keywords": ["monsoon", "rain", "rainy", "season", "humidity", "fungal", "disease", "common", "drainage", "spray", "june", "july", "kerala"],
+    "text": "The southwest monsoon brings long leaf wetness and high humidity, which is exactly what fungal and bacterial diseases need. The most common monsoon problems in Kerala are rice blast and bacterial blight, coconut bud rot and leaf rot, abnormal leaf fall in rubber, and rhizome rot in turmeric and ginger. Practical monsoon routine: clear and deepen drainage channels before the rains, avoid heavy nitrogen during wet spells, scout fields weekly because symptoms appear fast, remove and destroy infected plant parts instead of leaving them in the field, and do not spray when rain is likely within a few hours because the product will simply wash off."
+  },
+  {
+    "id": "summer-practices",
+    "crop": "General",
+    "topic": "seasonal",
+    "title": "Summer and dry season practices",
+    "keywords": ["summer", "dry", "heat", "drought", "mulch", "shade", "water saving", "march", "april", "season"],
+    "text": "From January to May the main risks are moisture stress and heat damage. Mulch every basin and bed with dry leaves, husk or straw, irrigate in the early morning or evening to cut evaporation losses, and give shade to young or newly planted seedlings. Sucking pests like mites and thrips increase in dry weather, so scout the underside of leaves regularly. This is also the right window for soil testing, liming acidic soils, and repairing bunds and drainage channels before the monsoon arrives."
+  },
+  {
+    "id": "yellow-leaves",
+    "crop": "General",
+    "topic": "diagnosis",
+    "title": "Why leaves turn yellow",
+    "keywords": ["yellow", "yellowing", "yellow leaves", "chlorosis", "nitrogen", "deficiency", "waterlogging", "root", "diagnosis", "pale"],
+    "text": "Yellowing leaves have a few common causes and the pattern tells you which one. Uniform pale yellowing of older leaves first usually points to nitrogen shortage. Yellowing between the veins while the veins stay green suggests iron or magnesium trouble, often on very acidic or very alkaline soil. Yellowing that starts at the base of the plant with soft or dark roots points to waterlogging or root rot, and here drainage matters more than fertilizer. Sudden yellowing on scattered plants with stunting can indicate a pest or disease at the root or stem. Check drainage and roots first, then nutrition, and upload a clear photo to the Disease Detection page if lesions or spots are present."
+  },
+  {
+    "id": "soil-health",
+    "crop": "General",
+    "topic": "soil",
+    "title": "Soil testing and acidity",
+    "keywords": ["soil", "ph", "acidity", "lime", "soil test", "organic matter", "compost", "fertility", "laterite", "kerala"],
+    "text": "Most Kerala soils are laterite and acidic, which locks up phosphorus and can release aluminium that harms roots. Test soil every two to three years through the Krishi Bhavan soil testing service and follow the recommendation for lime or dolomite instead of guessing, since over liming causes its own problems. Build organic matter continuously with compost, green leaf manure, cow dung and in situ mulching, because organic matter improves water holding, nutrient release and root growth all at once. Apply lime a few weeks before fertilizer, not together with it."
+  },
+  {
+    "id": "pesticide-safety",
+    "crop": "General",
+    "topic": "pests",
+    "title": "Safe pesticide practice",
+    "keywords": ["pesticide", "spray", "safety", "dose", "dosage", "fungicide", "insecticide", "label", "waiting period", "how much"],
+    "text": "Use chemical control only after confirming the problem and only with products approved for that crop in your state. Specific dosages must come from the product label or your local Krishi Bhavan officer, because the correct rate depends on the formulation, crop stage and sprayer volume. Always wear a mask, gloves and full sleeves, spray in calm weather during the cooler part of the day, never mix products without a recommendation, and respect the pre harvest waiting period printed on the label. Rotate between different modes of action so pests and fungi do not build resistance."
+  },
+  {
+    "id": "integrated-pest-management",
+    "crop": "General",
+    "topic": "pests",
+    "title": "Integrated pest management basics",
+    "keywords": ["ipm", "integrated", "pest", "management", "natural enemies", "neem", "trap", "prevention", "organic"],
+    "text": "Integrated pest management puts cheap preventive steps first and chemicals last. Start with healthy seed and resistant varieties, keep field sanitation good by removing crop residue and weeds that host pests, and use physical tools such as light traps, pheromone traps, yellow sticky traps and hand removal of egg masses. Protect natural enemies like spiders, ladybirds and parasitic wasps by avoiding unnecessary broad spectrum sprays. Neem based products work well against young sucking pest stages. Scout weekly and act on an actual threshold rather than spraying on a fixed calendar."
+  }
+]

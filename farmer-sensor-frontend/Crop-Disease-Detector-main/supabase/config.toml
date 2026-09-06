@@ -1,0 +1,22 @@
+# Supabase CLI configuration.
+#
+# This project uses the HOSTED Supabase instance only (project ablxehwvferspbytvxwi,
+# region ap-southeast-1). The local Docker stack is intentionally not used, so the
+# local service definitions (api/studio/auth/storage/realtime ports) have been
+# removed. The CLI is kept purely to manage migration history against the remote
+# database via `--linked` commands:
+#
+#   supabase link --project-ref ablxehwvferspbytvxwi
+#   supabase migration list --linked
+#   supabase db diff --linked
+#
+# For detailed reference: https://supabase.com/docs/guides/local-development/cli/config
+project_id = "Crop-Disease-Detector"
+
+[db]
+# Must match the remote major version (Postgres 17 on this project).
+major_version = 17
+
+[db.migrations]
+enabled = true
+schema_paths = []
